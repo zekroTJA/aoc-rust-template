@@ -1,11 +1,19 @@
 # https://taskfile.dev
 
-version: '3'
+version: "3"
 
 tasks:
   default:
     cmds:
       - task: run
+
+  init:
+    desc: "Initialize your workspace."
+    preconditions:
+      - sh: "[ ! -f .env ]"
+        msg: "Workspace has already been initialized."
+    cmds:
+      - echo 'SESSION_TOKEN=""' > .env
 
   new:
     desc: "Create a new day project."
@@ -28,7 +36,7 @@ tasks:
     desc: "Run solution with user input."
     cmds:
       - bash scripts/run.sh {{.CLI_ARGS}}
-  
+
   runtest:
     aliases:
       - "rt"
@@ -43,7 +51,7 @@ tasks:
       RELEASE: "true"
     cmds:
       - bash scripts/run.sh {{.CLI_ARGS}}
-    
+
   releaseruntest:
     aliases:
       - "rrt"
