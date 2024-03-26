@@ -4,10 +4,10 @@ source "$PWD/.env" || { echo "No .env file found in the current directory!"; exi
 
 [ -z "$SESSION_TOKEN" ] && { echo "SESSION_TOKEN is not set in .env file!"; exit 1; }
 
-current_day=$(find . -maxdepth 1 -type d -name "day-*" | head -1 | cut -c 3-)
+current_day=$(find . -maxdepth 1 -type d -name "day-*" | sort | tail -1 | cut -c 3-)
 current_day=${current_day/*-}
-next_day="$(( current_day + 1 ))"
-next_day_padded=$(printf "%02d" $next_day)
+next_day="$(expr $current_day + 1)"
+next_day_padded=$(printf "%02d" "$next_day")
 
 if [ "$current_day" == "" ]; then
     insert_after="lib"
@@ -22,6 +22,8 @@ cargo new --bin --vcs=none "day-$next_day_padded"
 cargo add -p "day-$next_day_padded" lib --path="lib"
 
 cat > "day-$next_day_padded/src/main.rs" << EOF
+use lib::*;
+
 fn main() {
     let input: String = lib::read_input!();
 }
@@ -32,7 +34,7 @@ mod test {
 }
 EOF
 
-curl -L -H "Cookie: session=$SESSION_TOKEN" -o "day-$next_day_padded/input.txt" "https://adventofcode.com/${YEAR}/day/${next_day}/input"
+curl -LsH "Cookie: session=$SESSION_TOKEN" -o "day-$next_day_padded/input.txt" "https://adventofcode.com/${YEAR}/day/${next_day}/input"
 
 touch "day-$next_day_padded/challenge.txt"
 touch "day-$next_day_padded/test_input.txt"

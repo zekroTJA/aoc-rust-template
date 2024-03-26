@@ -1,25 +1,54 @@
-use crate::vector::Vector;
-use std::ops::{Add, AddAssign, Sub, SubAssign};
+use crate::{vector::Vector, Direction};
+use core::fmt;
+use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign};
 
-#[derive(Clone, Copy, Hash, Eq, PartialEq, Debug)]
-pub struct Pos(pub isize, pub isize);
+#[derive(Clone, Copy, Hash, Eq, PartialEq, Default, Debug, PartialOrd, Ord)]
+pub struct Pos {
+    pub x: isize,
+    pub y: isize,
+}
+
+impl Pos {
+    pub fn is_negative(&self) -> bool {
+        self.x.is_negative() || self.y.is_negative()
+    }
+
+    pub fn is_null(&self) -> bool {
+        self.x == 0 && self.y == 0
+    }
+
+    pub fn manhattan_distance(&self, to: Pos) -> usize {
+        (to.y - self.y).unsigned_abs() + (to.x - self.x).unsigned_abs()
+    }
+
+    pub fn mv(self, dir: Direction) -> Self {
+        self + dir.into()
+    }
+
+    pub fn turn_ccw(&self) -> Pos {
+        Pos {
+            x: -self.y,
+            y: self.x,
+        }
+    }
+}
 
 impl Vector for Pos {
     type Output = Pos;
 
     fn len(&self) -> f64 {
-        ((self.0.pow(2) + self.1.pow(2)) as f64).sqrt().abs()
+        ((self.x.pow(2) + self.y.pow(2)) as f64).sqrt().abs()
     }
 
     fn flatten(&self) -> Self::Output {
-        let (mut x, mut y) = (self.0, self.1);
+        let (mut x, mut y) = (self.x, self.y);
         if x != 0 {
             x /= x.abs();
         }
         if y != 0 {
             y /= y.abs();
         }
-        Pos(x, y)
+        (x, y).into()
     }
 }
 
@@ -27,7 +56,7 @@ impl Add for Pos {
     type Output = Pos;
 
     fn add(self, rhs: Self) -> Self::Output {
-        Pos(self.0 + rhs.0, self.1 + rhs.1)
+        (self.x + rhs.x, self.y + rhs.y).into()
     }
 }
 
@@ -35,21 +64,36 @@ impl Sub for Pos {
     type Output = Pos;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        Pos(self.0 - rhs.0, self.1 - rhs.1)
+        (self.x - rhs.x, self.y - rhs.y).into()
     }
 }
 
 impl AddAssign for Pos {
     fn add_assign(&mut self, rhs: Self) {
-        self.0 += rhs.0;
-        self.1 += rhs.1;
+        self.x += rhs.x;
+        self.y += rhs.y;
     }
 }
 
 impl SubAssign for Pos {
     fn sub_assign(&mut self, rhs: Self) {
-        self.0 -= rhs.0;
-        self.1 -= rhs.1;
+        self.x -= rhs.x;
+        self.y -= rhs.y;
+    }
+}
+
+impl Mul for Pos {
+    type Output = Self;
+
+    fn mul(self, rhs: Self) -> Self::Output {
+        (self.x * rhs.x, self.y * rhs.y).into()
+    }
+}
+
+impl MulAssign for Pos {
+    fn mul_assign(&mut self, rhs: Self) {
+        self.x *= rhs.x;
+        self.y *= rhs.y;
     }
 }
 
@@ -58,6 +102,15 @@ where
     T: Into<isize>,
 {
     fn from((x, y): (T, T)) -> Self {
-        Self(x.into(), y.into())
+        Self {
+            x: x.into(),
+            y: y.into(),
+        }
+    }
+}
+
+impl fmt::Display for Pos {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "(x: {}, y: {})", self.x, self.y)
     }
 }

@@ -1,7 +1,14 @@
-pub mod direction;
-pub mod pos;
-pub mod pos3d;
-pub mod vector;
+mod direction;
+mod grid;
+mod pos;
+mod pos3d;
+mod vector;
+
+pub use direction::*;
+pub use grid::*;
+pub use pos::*;
+pub use pos3d::*;
+pub use vector::*;
 
 #[macro_export]
 macro_rules! read_input {
@@ -35,4 +42,18 @@ macro_rules! read_test_input {
         input_file.read_to_string(&mut input).expect("read input");
         input.trim_end().to_owned()
     }};
+}
+
+#[macro_export]
+macro_rules! p1 {
+    ($p: expr) => {
+        println!("Part 1 Solution: {}", $p);
+    };
+}
+
+#[macro_export]
+macro_rules! p2 {
+    ($p: expr) => {
+        println!("Part 2 Solution: {}", $p);
+    };
 }
