@@ -9,24 +9,36 @@ tasks:
 
   init:
     desc: "Initialize your workspace."
+    aliases:
+      - "i"
     preconditions:
       - sh: "[ ! -f .env ]"
         msg: "Workspace has already been initialized."
+    silent: true
     cmds:
       - echo 'SESSION_TOKEN=""' > .env
+      - |
+        echo ".env file has been created. Please grab your session token from the adventofcode.com \
+        website and paste it into the SESSION_TOKEN variable in the .env file."
 
   new:
     desc: "Create a new day project."
+    aliases:
+      - "n"
     cmds:
       - bash scripts/new.sh
 
   commit:
     desc: "Commit the latest day solution."
+    aliases:
+      - "c"
     cmds:
       - bash scripts/commit.sh
 
   test:
     desc: "Run all unit tests."
+    aliases:
+      - "t"
     cmds:
       - cargo test
 
