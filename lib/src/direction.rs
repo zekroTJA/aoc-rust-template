@@ -2,6 +2,8 @@ use crate::pos::Pos;
 use core::fmt;
 use std::ops::Mul;
 
+/// Direction represents a vector with a length if 1 represented as "direction" in a
+/// cartesian coordinate system.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum Direction {
     Up,
@@ -11,10 +13,12 @@ pub enum Direction {
 }
 
 impl Direction {
+    /// Returns an array of all available directions.
     pub fn all() -> [Self; 4] {
         [Self::Up, Self::Right, Self::Down, Self::Left]
     }
 
+    /// Reverses a direction.
     pub fn reverse(&self) -> Direction {
         match self {
             Direction::Up => Direction::Down,

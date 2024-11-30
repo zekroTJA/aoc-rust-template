@@ -1,5 +1,6 @@
 use std::ops::Add;
 
+/// Position in a three dimensional cartesian coordinate system.
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
 pub struct Pos3d {
     pub x: isize,

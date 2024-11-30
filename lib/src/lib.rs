@@ -1,13 +1,17 @@
 mod direction;
+mod grid;
 mod pos;
 mod pos3d;
 mod vector;
 
 pub use direction::*;
+pub use grid::*;
 pub use pos::*;
 pub use pos3d::*;
 pub use vector::*;
 
+/// Reads input either from `input.txt` (or `test_input.txt` when `--test` flag is provided)
+/// in the folder of the executed day project and returns the space trimmed contents as string.
 #[macro_export]
 macro_rules! read_input {
     () => {{
@@ -27,6 +31,7 @@ macro_rules! read_input {
     }};
 }
 
+/// Prints the passed expression result as 'Part 1 Solution: {p}'.
 #[macro_export]
 macro_rules! p1 {
     ($p: expr) => {
@@ -34,6 +39,7 @@ macro_rules! p1 {
     };
 }
 
+/// Prints the passed expression result as 'Part 2 Solution: {p}'.
 #[macro_export]
 macro_rules! p2 {
     ($p: expr) => {

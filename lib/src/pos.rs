@@ -2,6 +2,7 @@ use crate::{vector::Vector, Direction};
 use core::fmt;
 use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign};
 
+/// Position in a two dimensional cartesian coordinate system.
 #[derive(Clone, Copy, Hash, Eq, PartialEq, Default, Debug, PartialOrd, Ord)]
 pub struct Pos {
     pub x: isize,
@@ -9,22 +10,85 @@ pub struct Pos {
 }
 
 impl Pos {
-    pub fn is_negative(&self) -> bool {
+    /// Returns true if either the x or y component of the point is negative.
+    ///
+    /// ```
+    /// # use lib::Pos;
+    /// let pos1 = Pos { x: 1, y: 1 };
+    /// assert!(!pos1.is_any_negative());
+    ///
+    /// let pos2 = Pos { x: -1, y: 1 };
+    /// assert!(pos2.is_any_negative());
+    /// ```
+    pub fn is_any_negative(&self) -> bool {
         self.x.is_negative() || self.y.is_negative()
     }
 
-    pub fn is_null(&self) -> bool {
+    /// Returns true if either the x or y component of the point is zero.
+    ///
+    /// ```
+    /// # use lib::Pos;
+    /// let pos1 = Pos { x: 0, y: 1 };
+    /// assert!(!pos1.is_zero());
+    ///
+    /// let pos2 = Pos { x: 0, y: 0 };
+    /// assert!(pos2.is_zero());
+    /// ```
+    pub fn is_zero(&self) -> bool {
         self.x == 0 && self.y == 0
     }
 
+    /// Returns the [manhattan distance](https://en.wikipedia.org/wiki/Taxicab_geometry) from the
+    /// current point to Point `to`.
+    ///
+    /// ```
+    /// # use lib::Pos;
+    /// let pos1 = Pos { x: 1, y: 2};
+    /// let pos2 = Pos { x: 4, y: 3 };
+    ///
+    /// assert_eq!(pos1.manhattan_distance(pos2), 4);
+    /// ```
     pub fn manhattan_distance(&self, to: Pos) -> usize {
         (to.y - self.y).unsigned_abs() + (to.x - self.x).unsigned_abs()
     }
 
+    /// "Walks" the point into the given direction by one unit.
+    ///
+    /// ```
+    /// # use lib::{Pos, Direction};
+    /// let pos = Pos { x: 1, y: 2};
+    ///
+    /// assert_eq!(pos.mv(Direction::Down), Pos { x: 1, y: 1 });
+    /// ```
     pub fn mv(self, dir: Direction) -> Self {
         self + dir.into()
     }
 
+    /// Seen the point as a vector from (0, 0), this function returns
+    /// the vector turned 90° counter-clockwise.
+    ///
+    /// ```
+    /// # use lib::{Pos, Direction};
+    /// let pos = Pos { x: 1, y: 2};
+    ///
+    /// assert_eq!(pos.turn_cw(), Pos { x: 2, y: -1 });
+    /// ```
+    pub fn turn_cw(&self) -> Pos {
+        Pos {
+            x: self.y,
+            y: -self.x,
+        }
+    }
+
+    /// Seen the point as a vector from (0, 0), this function returns
+    /// the vector turned 90° counter-clockwise.
+    ///
+    /// ```
+    /// # use lib::{Pos, Direction};
+    /// let pos = Pos { x: 1, y: 2};
+    ///
+    /// assert_eq!(pos.turn_ccw(), Pos { x: -2, y: 1 });
+    /// ```
     pub fn turn_ccw(&self) -> Pos {
         Pos {
             x: -self.y,
