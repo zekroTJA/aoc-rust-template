@@ -1,5 +1,4 @@
 YEAR="$(date +%Y)"
-YEAR=2023
 
 source "$PWD/.env" || { echo "No .env file found in the current directory!"; exit 1; }
 
