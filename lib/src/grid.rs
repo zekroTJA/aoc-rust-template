@@ -130,7 +130,7 @@ pub fn get_at<T>(grid: &[Vec<T>], pos: Pos) -> Option<&T> {
 
 /// Takes a matrix flips rows to colums and colums to rows.
 ///
-/// Example:
+/// # Example
 /// ```
 /// # use lib::flip_grid;
 /// let res = flip_grid(&[vec![1, 2], vec![3, 4]]);
